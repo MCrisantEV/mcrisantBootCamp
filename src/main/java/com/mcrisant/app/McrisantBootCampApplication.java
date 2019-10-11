@@ -10,4 +10,5 @@ public class McrisantBootCampApplication {
 		SpringApplication.run(McrisantBootCampApplication.class, args);
 	}
 
+
 }
