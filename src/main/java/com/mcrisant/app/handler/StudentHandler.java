@@ -3,6 +3,10 @@ package com.mcrisant.app.handler;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
 import java.net.URI;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -40,6 +44,35 @@ public class StudentHandler {
 				.switchIfEmpty(ServerResponse.notFound().build());
 	}
 	
+	public Mono<ServerResponse> listByNombres(ServerRequest request) {
+		String nom = request.pathVariable("nombres");
+		return service.findByNombres(nom)
+				.flatMap(s -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(s)))
+				.switchIfEmpty(ServerResponse.notFound().build());
+	}
+	
+	public Mono<ServerResponse> listByNumDoc(ServerRequest request) {
+		String numero = request.pathVariable("numDoc");
+		return service.findByNumDoc(numero)
+				.flatMap(s -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(s)))
+				.switchIfEmpty(ServerResponse.notFound().build());
+	}
+	
+	public Mono<ServerResponse> listByfecha(ServerRequest request) throws ParseException {	
+		DateFormat format = new SimpleDateFormat();
+		String fechaString = request.pathVariable("fechaNac");
+	
+		 try {
+			 Date fecha = format.parse(fechaString);
+			 return service.findByFecha(fecha)
+						.flatMap(s -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(s)))
+						.switchIfEmpty(ServerResponse.notFound().build());
+
+	        } catch (ParseException e) {
+	            return ServerResponse.notFound().build();
+	        }
+	}
+	
 	public Mono<ServerResponse> crear(ServerRequest request) {
 		Mono<Student> student = request.bodyToMono(Student.class);
 		return student.flatMap(s -> {
@@ -53,8 +86,25 @@ public class StudentHandler {
 						.collectList()
 						.flatMap(list -> ServerResponse.badRequest().body(fromObject(list)));
 			} else {
-				return service.save(s).flatMap(sdb -> ServerResponse.created(URI.create("student/".concat(sdb.getId())))
-						.contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(sdb)));
+				if(s.getFamilia().size() >= 2) {
+					int contPadres = 0;
+					for(int i=0; i<s.getFamilia().size(); i++) {
+						if(s.getFamilia().get(i).getParentesco().equals("padre") || s.getFamilia().get(i).getParentesco().equals("madre")) {
+							contPadres++;
+						}
+					}
+					if(contPadres <= 2) {
+						return service.save(s).flatMap(sdb -> ServerResponse.created(URI.create("student/".concat(sdb.getId())))
+								.contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(sdb)));
+					}else {
+						//mas de 2 Padres
+						return ServerResponse.badRequest().build();
+					}
+					
+				} else {
+					//menos de dos familiares
+					return ServerResponse.badRequest().build();
+				}
 			}
 		});
 	}

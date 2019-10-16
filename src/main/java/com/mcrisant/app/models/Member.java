@@ -1,9 +1,6 @@
 package com.mcrisant.app.models;
 
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "members")
 public class Member extends Person {
 
 	private String parentesco;

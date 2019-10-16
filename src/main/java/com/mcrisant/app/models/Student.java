@@ -1,6 +1,8 @@
 package com.mcrisant.app.models;
 
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -14,7 +16,7 @@ public class Student extends Person{
 	
 	@Valid
 	@NotNull
-	private Family familia;
+	private List<Member> familia;
 
 	public Student() {
 	}
@@ -27,11 +29,11 @@ public class Student extends Person{
 		this.id = id;
 	}
 
-	public Family getFamilia() {
+	public List<Member> getFamilia() {
 		return familia;
 	}
 
-	public void setFamilia(Family familia) {
+	public void setFamilia(List<Member> familia) {
 		this.familia = familia;
 	}
 		

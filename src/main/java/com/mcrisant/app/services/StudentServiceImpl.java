@@ -1,5 +1,8 @@
 package com.mcrisant.app.services;
 
+
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,21 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public Mono<Void> delete(Student student) {
 		return studentRep.delete(student);
+	}
+
+	@Override
+	public Mono<Student> findByNombres(String nombres) {
+		return studentRep.findByNombres(nombres);
+	}
+
+	@Override
+	public Mono<Student> findByNumDoc(String numero) {
+		return studentRep.findByNumDoc(numero);
+	}
+
+	@Override
+	public Mono<Student> findByFecha(Date fecha) {
+		return studentRep.findByFecha(fecha);
 	}
 
 }
