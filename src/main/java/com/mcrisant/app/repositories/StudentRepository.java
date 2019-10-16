@@ -17,7 +17,6 @@ public interface StudentRepository extends ReactiveMongoRepository<Student, Stri
 	@Query("{ 'nombres' : { $regex: ?0 } }")
     Mono<Student> findByNombres(String nombres);
 	
-	
 	@Query("{'fechaNac' : ?0}")
 	Mono<Student> findByFecha(Date fecha);
 	

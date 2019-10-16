@@ -58,12 +58,12 @@ public class StudentHandler {
 				.switchIfEmpty(ServerResponse.notFound().build());
 	}
 	
-	public Mono<ServerResponse> listByfecha(ServerRequest request) throws ParseException {	
-		DateFormat format = new SimpleDateFormat();
+	public Mono<ServerResponse> listByfecha(ServerRequest request) {	
 		String fechaString = request.pathVariable("fechaNac");
-	
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
 		 try {
-			 Date fecha = format.parse(fechaString);
+			 Date fecha = df.parse(fechaString);
 			 return service.findByFecha(fecha)
 						.flatMap(s -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(s)))
 						.switchIfEmpty(ServerResponse.notFound().build());
