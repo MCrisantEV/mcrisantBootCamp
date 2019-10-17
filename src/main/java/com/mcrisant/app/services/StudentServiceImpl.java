@@ -39,7 +39,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public Mono<Student> findByNombres(String nombres) {
+	public Flux<Student> findByNombres(String nombres) {
 		return studentRep.findByNombres(nombres);
 	}
 
@@ -49,8 +49,13 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public Mono<Student> findByFecha(Date fecha) {
+	public Flux<Student> findByFecha(Date fecha) {
 		return studentRep.findByFecha(fecha);
+	}
+
+	@Override
+	public Flux<Student> findByRangoFechas(Date fechaInicio, Date fechaFin) {
+		return studentRep.findByRangoFechas(fechaInicio, fechaFin);
 	}
 
 }

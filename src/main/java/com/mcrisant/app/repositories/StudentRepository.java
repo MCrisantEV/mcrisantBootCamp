@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 import com.mcrisant.app.models.Student;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface StudentRepository extends ReactiveMongoRepository<Student, String> {
@@ -15,13 +16,12 @@ public interface StudentRepository extends ReactiveMongoRepository<Student, Stri
     Mono<Student> findByNumDoc(String numero);
 	
 	@Query("{ 'nombres' : { $regex: ?0 } }")
-    Mono<Student> findByNombres(String nombres);
+	Flux<Student> findByNombres(String nombres);
 	
 	@Query("{'fechaNac' : ?0}")
-	Mono<Student> findByFecha(Date fecha);
+	Flux<Student> findByFecha(Date fecha);
 	
-	/*@Query("{ 'age' : { $gt: ?0, $lt: ?1 } }")  @Query("{ 'names' : ?0}")
-After -> despues GT
-Before -> antes LT
-	List<User> findUsersByAgeBetween(int ageGT, int ageLT);*/
+	@Query("{ 'fechaNac' : { $gt: ?0, $lt: ?1 } }")
+	Flux<Student> findByRangoFechas(Date fechaInicio, Date fechaFin);
+
 }
