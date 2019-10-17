@@ -3,7 +3,6 @@ package com.mcrisant.app.handler;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
 import java.net.URI;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,9 +45,9 @@ public class StudentHandler {
 	
 	public Mono<ServerResponse> listByNombres(ServerRequest request) {
 		String nom = request.pathVariable("nombres");
-		return service.findByNombres(nom)
-				.flatMap(s -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(s)))
-				.switchIfEmpty(ServerResponse.notFound().build());
+		
+		return ServerResponse.ok().contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).body(service.findByNombres(nom),
+				Student.class);
 	}
 	
 	public Mono<ServerResponse> listByNumDoc(ServerRequest request) {
@@ -60,13 +59,35 @@ public class StudentHandler {
 	
 	public Mono<ServerResponse> listByfecha(ServerRequest request) {	
 		String fechaString = request.pathVariable("fechaNac");
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String fechatime = fechaString+" 00:00:00.000 +0000"; 
 		
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
+
 		 try {
-			 Date fecha = df.parse(fechaString);
-			 return service.findByFecha(fecha)
-						.flatMap(s -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(s)))
-						.switchIfEmpty(ServerResponse.notFound().build());
+			 Date fecha = df.parse(fechatime);
+			 
+			 return ServerResponse.ok().contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).body(service.findByFecha(fecha),
+						Student.class);
+
+	        } catch (ParseException e) {
+	            return ServerResponse.notFound().build();
+	        }
+	}
+	
+	public Mono<ServerResponse> listByRangoFechas(ServerRequest request) {	
+		String fechainicio = request.pathVariable("fechaInicio");
+		String fechafin = request.pathVariable("fechaFin");
+		String ftInicio = fechainicio+" 00:00:00.000 +0000";
+		String ftFin = fechafin+" 00:00:00.000 +0000";
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
+
+		 try {
+			 Date fechaInicio = df.parse(ftInicio);
+			 Date fechaFin = df.parse(ftFin);
+			 
+			 return ServerResponse.ok().contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).body(service.findByRangoFechas(fechaInicio, fechaFin),
+						Student.class);
 
 	        } catch (ParseException e) {
 	            return ServerResponse.notFound().build();

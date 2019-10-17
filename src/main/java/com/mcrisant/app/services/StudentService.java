@@ -14,8 +14,9 @@ public interface StudentService {
 	public Mono<Student> findById(String id);
 	public Mono<Student> save(Student student);
 	public Mono<Void> delete(Student student);
-	public Mono<Student> findByNombres(String nombres);
+	public Flux<Student> findByNombres(String nombres);
 	public Mono<Student> findByNumDoc(String numero);
-	public Mono<Student> findByFecha(Date fecha);
+	public Flux<Student> findByFecha(Date fecha);
+	public Flux<Student> findByRangoFechas(Date fechaInicio, Date fechaFin);
 
 }

@@ -23,6 +23,7 @@ public class RouterFuctionConfig {
 				.andRoute(DELETE("/student/{id}"), handler::eliminar)
 				.andRoute(GET("/student/names/{nombres}"), handler::listByNombres)
 				.andRoute(GET("/student/numero/{numDoc}"), handler::listByNumDoc)
-				.andRoute(GET("/student/fecha/{fechaNac}"), handler::listByfecha);
+				.andRoute(GET("/student/fecha/{fechaNac}"), handler::listByfecha)
+				.andRoute(GET("/student/rangofechas/{fechaInicio}/{fechaFin}"), handler::listByRangoFechas);
 	}
 }
