@@ -32,7 +32,7 @@ public class StudentHandler {
 	private Validator validator;
 	
 	public Mono<ServerResponse> listar(ServerRequest request) {
-		return ServerResponse.ok().contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).body(service.findAll(),
+		return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(service.findAll(),
 				Student.class);
 	}
 
@@ -46,7 +46,7 @@ public class StudentHandler {
 	public Mono<ServerResponse> listByNombres(ServerRequest request) {
 		String nom = request.pathVariable("nombres");
 		
-		return ServerResponse.ok().contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).body(service.findByNombres(nom),
+		return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(service.findByNombres(nom),
 				Student.class);
 	}
 	
@@ -65,8 +65,7 @@ public class StudentHandler {
 
 		 try {
 			 Date fecha = df.parse(fechatime);
-			 
-			 return ServerResponse.ok().contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).body(service.findByFecha(fecha),
+			 return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(service.findByFecha(fecha),
 						Student.class);
 
 	        } catch (ParseException e) {
@@ -77,16 +76,17 @@ public class StudentHandler {
 	public Mono<ServerResponse> listByRangoFechas(ServerRequest request) {	
 		String fechainicio = request.pathVariable("fechaInicio");
 		String fechafin = request.pathVariable("fechaFin");
-		String ftInicio = fechainicio+" 00:00:00.000 +0000";
-		String ftFin = fechafin+" 00:00:00.000 +0000";
+		fechainicio = fechainicio+" 00:00:00.000 +0000";
+		fechafin = fechafin+" 00:00:00.000 +0000";
 		
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
 
 		 try {
-			 Date fechaInicio = df.parse(ftInicio);
-			 Date fechaFin = df.parse(ftFin);
-			 
-			 return ServerResponse.ok().contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).body(service.findByRangoFechas(fechaInicio, fechaFin),
+			 Date fechaInicio = df.parse(fechainicio);
+			 Date fechaFin = df.parse(fechafin);
+			 System.out.println(fechaInicio);
+			 return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8)
+					 .body(service.findByRangoFechas(fechaInicio, fechaFin),
 						Student.class);
 
 	        } catch (ParseException e) {
