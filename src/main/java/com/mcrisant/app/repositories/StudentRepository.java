@@ -23,6 +23,5 @@ public interface StudentRepository extends ReactiveMongoRepository<Student, Stri
 	
 	@Query("{ 'fechaNac' : { $gt: ?0, $lt: ?1 } }")
 	Flux<Student> findByRangoFechas(Date fechaInicio, Date fechaFin);
-	
 
 }
